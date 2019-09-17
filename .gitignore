@@ -1,0 +1,14 @@
+# Python:
+*.py[cod]
+config_test.ini
+config_product.ini
+daily/*.txt
+daily/*.csv
+*.idea
+*.DS_Store
+config.ini
+local_start.sh
+cache
+csv
+node_modules
+*.sh

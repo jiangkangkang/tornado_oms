@@ -1,0 +1,22 @@
+MYSQL:
+    host: 127.0.0.1
+    port: 3306
+    user: root
+    password: root
+    db: tornado_oms
+    charset: utf8
+    maxsize: 5
+    minsize: 1
+REDIS:
+    expire: 7200
+    host: 127.0.0.1
+    port: 6379
+    db: 3
+    password: root
+WEB_GLOBAL:
+    web_host: 0.0.0.0
+    web_port: 8083
+    login_cookie_name: tornado_oms
+    access_log: true
+    is_prod: false
+    sqlalchemy_database_uri: mysql+pymysql://root:root@127.0.0.1:3306/tornado_oms
