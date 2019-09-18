@@ -5,8 +5,6 @@ class TestHandler(RequestHandler):
     def get(self, *args, **kwargs):
         name = self.get_query_argument('name')
         age = self.get_query_argument('age')
-        # self.write(name)
-        # self.write(arg)
         self.render('test2.html', name=name, age=age)
 
 
