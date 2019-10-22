@@ -493,68 +493,6 @@ def get_post_dict_field_value(data_dict, field_name):
 #     return data_list
 
 
-
-
-
-
-
-
-class MysqlInstance(object):
-    @staticmethod
-    def _parse_sql(param_dict):
-        key_list = ''
-        value_list = ''
-        for key in param_dict:
-            value = param_dict[key]
-            if value != None:
-                key_list += '%s, ' % key
-                if isinstance(value, str):
-                    value = value.replace("'", '"')
-                    value_list += "'%s', " % value
-                elif isinstance(value, int):
-                    value_list += "%d, " % value
-                else:
-                    value_list += "'%s', " % value
-
-        if key_list != '':
-            key_list = key_list[:-2]
-        if value_list != '':
-            value_list = value_list[:-2]
-        return key_list, '(' + value_list + ')'
-
-    @staticmethod
-    def gen_insert_sql(table, param_dict, use_ignore=False):
-        key_list, value_list = MysqlInstance._parse_sql(param_dict)
-        if use_ignore:
-            front = 'INSERT IGNORE INTO'
-        else:
-            front = 'INSERT INTO'
-        sql = '%s %s (%s) VALUES %s' % (front, table, key_list, value_list)
-        return sql
-
-    @staticmethod
-    def gen_update_sql(table, param_dict, update_row_id=None,
-                       where_clause=None):
-
-        sql_exp = "UPDATE %s SET " % table
-        for key in param_dict:
-            value = param_dict[key]
-            if isinstance(value, str):
-                value = value.replace("'", '"')
-                sql_exp += "%s = '%s'," % (key, value)
-            elif isinstance(value, int):
-                sql_exp += "%s = %d," % (key, value)
-            else:
-                value = value.replace("'", '"')
-                sql_exp += "%s = '%s'," % (key, value)
-        sql_exp = sql_exp[:-1] + " "
-        if update_row_id is not None:
-            sql_exp += ' WHERE id = %d' % int(update_row_id)
-        elif where_clause is not None:
-            sql_exp += ' WHERE {}'.format(where_clause)
-        return sql_exp
-
-
 # 根据时间生产文件名
 def create_filed_name(file_type):
     filed_name = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + str(file_type)
@@ -608,18 +546,3 @@ def get_two_datetime(st1, st2):
     return st1 + '-' + st2
 
 
-if __name__ == '__main__':
-    # a = '中国'
-    # c = '中国'
-    #
-    # d = utf8(a)
-    # e = utf8(c)
-    # print(d, type(d))
-    # print(e, type(e))
-    # a = '1dfgdsf'
-    # b = '1234'
-    # c = create_md5(a, b)
-    # print(c)
-    print(AESUtil().encryt('123', 'jud12343fgt56786'))
-    print(AESUtil().decrypt('Y/quK8EZL37UYlXHNGfFFA==', 'jud12343fgt56786')
-    )

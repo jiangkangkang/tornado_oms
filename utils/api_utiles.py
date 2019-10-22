@@ -1,12 +1,14 @@
 import base64
 import csv
 import os
-import requests
-from sanic.log import logger
-import xlrd
-from sanic.response import file
+import uuid
 
-from utils.utils import md5_value, create_filed_name
+import requests
+import torndb
+import xlrd
+import logging
+
+from utils.utils import md5_value, create_filed_name, utf8
 
 
 # 获取分页内容
@@ -19,12 +21,12 @@ def get_page_data(current_page, page_size, data_list):
     return data_list
 
 
-async def requests_get(path, data_dict):
+def requests_get(path, data_dict):
     result = requests.get(url=path, params=data_dict)
     return result
 
 
-async def requests_post(path, data_dict):
+def requests_post(path, data_dict):
     result = requests.post(path, data_dict)
     return result
 
@@ -77,23 +79,23 @@ def bas64_uploads_img(request, bas64_str):
     file_url = '/static/uploads/{}/{}/{}'.format(
         root_path, parent_name, file_new_name
     )
-    logger.info('file_exists:{}'.format(os.path.exists(storage_file_url)))
+    logging.info('file_exists:{}'.format(os.path.exists(storage_file_url)))
     if not os.path.exists(storage_file_url):
         with open(storage_file_url, 'wb') as f:
             f.write(base64.b64decode(bas64_str))
     file_url = request.scheme + '://' + request.host + file_url
-    logger.info('file_url:{}'.format(file_url))
+    logging.info('file_url:{}'.format(file_url))
     return file_url
 
 
-async def read_excel(file_obj, file_type='contents', start_number=1):
+def read_excel(file_obj, file_type='contents', start_number=1):
     """
     :param file_obj:
     :param file_type:
     :param start_number: 读取开始行数
     :return: 这里读出的数值为浮点值，不是整数
     """
-    logger.info('excel Name:{}'.format(file_obj.name))
+    logging.info('excel Name:{}'.format(file_obj.name))
     if file_type == 'contents':
         wb = xlrd.open_workbook(filename=None, file_contents=file_obj.body)
     else:
@@ -124,11 +126,11 @@ def remove_static_file(file_path):
     for filed in filed_list:
         if filed == file_name:
             os.remove(new_file_path + filed)
-            logger.info('remove file {}'.format(new_file_path + filed))
+            logging.info('remove file {}'.format(new_file_path + filed))
 
 
 # 生成导出文件csv
-async def data_to_csv(data_list, heads=None, num=0):
+def data_to_csv(data_list, heads=None, num=0):
     """
     :param data_list:
     :param heads:
@@ -152,8 +154,35 @@ async def data_to_csv(data_list, heads=None, num=0):
         for data in data_list:
             lin.append(list(data.values())[num:])
         csv_write.writerows(lin)
-    return await file(url_filed + filed_name, filename=filed_name)
+    return url_filed + filed_name
 
+
+def _retry_db_execute(func_run, db, sql_exp, is_query, use_logging,
+                      *parameters, **kwparameters):
+    retry_max_num = 1
+    retry_num = 0
+    result = None
+    sql_id = str(uuid.uuid1())
+    if not is_query and use_logging:
+        info_msg = '[mysql_db]sql_exp:{},parameters:{},kwparameters:{}'
+        info_msg = info_msg.format(utf8(sql_exp), parameters, kwparameters)
+        info_msg = info_msg.replace(',parameters:(),kwparameters:{}', '')
+        logging.info(info_msg)
+    log_template = '[mysql_db]sql_id:{},retry_num:{} but still error:{}'
+    while retry_num <= retry_max_num:
+        try:
+            result = func_run()
+        except torndb.OperationalError as e:
+            if retry_num == retry_max_num:
+                logging.info(log_template.format(sql_id, retry_num, e))
+                raise
+        else:
+            break
+        finally:
+            # cost_time = (datetime.datetime.now() - begin_time).total_seconds()
+            # logging.info('[mysql_db]sql_id:{},finally run cost_time:{} s'.format(sql_id, cost_time))
+            retry_num += 1
+    return result
 
 if __name__ == '__main__':
     pass

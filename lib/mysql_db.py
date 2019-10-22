@@ -1,26 +1,62 @@
+import logging
+import traceback
+
 from config import config_info
-import torndb
+import tornado.gen
+import tormysql
+from tormysql import DictCursor
 
 
 class MysqlInstance(object):
-    @staticmethod
-    def instance():
-        if not hasattr(MysqlInstance, "_instance"):
-            # New instance
-            MysqlInstance._instance = MysqlInstance()
-        return MysqlInstance._instance
-
     def __init__(self):
         self.config_instance = config_info['MYSQL']
-        self.db = self.gen_db_conn()
+        self.__pool = self.__gen_db_conn()
 
-    def gen_db_conn(self):
-        db_conn = torndb.Connection(
+    def __gen_db_conn(self):
+        pool = tormysql.ConnectionPool(
+            max_connections=self.config_instance['maxsize'],
+            debug_connection_used=self.config_instance['debug'],
             host=self.config_instance['host'],
             database=self.config_instance['db'],
             user=self.config_instance['user'],
-            password=self.config_instance['password'])
-        return db_conn
+            password=self.config_instance['password'],
+            charset=self.config_instance['charset'])
+        return pool
+
+    @tornado.gen.coroutine
+    def query_all(self, sql, args=None):
+        datas = []
+        with (yield self.__pool.Connection()) as conn:
+            try:
+                with conn.cursor(cursor_cls=DictCursor) as cursor:
+                    logging.info(sql, args, cursor)
+                    yield cursor.execute(sql, args)
+                    datas = cursor.fetchall()
+            except Exception as e:
+                logging.error(traceback.format_exc())
+                logging.error("Query error: %s", e.args)
+            else:
+                yield conn.commit()
+
+        raise tornado.gen.Return(datas)
+
+    @tornado.gen.coroutine
+    def execute(self, sql, args=None):
+        ret = None
+
+        with (yield self.__pool.Connection()) as conn:
+            try:
+                with conn.cursor(cursor_cls=DictCursor) as cursor:
+                    logging.info(sql, args, cursor)
+                    ret = yield cursor.execute(sql, args)
+            except Exception as e:
+                logging.error(traceback.print_exc())
+                logging.error("Query error: %s", e.args)
+                yield conn.rollback()
+            else:
+                yield conn.commit()
+
+        raise tornado.gen.Return(ret)
 
     @staticmethod
     def _parse_sql(param_dict):
@@ -28,7 +64,7 @@ class MysqlInstance(object):
         value_list = ''
         for key in param_dict:
             value = param_dict[key]
-            if value != None:
+            if value is not None:
                 key_list += '%s, ' % key
                 if isinstance(value, str):
                     value = value.replace("'", '"')
@@ -75,3 +111,4 @@ class MysqlInstance(object):
         elif where_clause is not None:
             sql_exp += ' WHERE {}'.format(where_clause)
         return sql_exp
+

@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>用户登录</title>
+
+{#<link type="text/css" href="/static/css/alerts/alert.css" rel="stylesheet" />#}
+<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/vector.js"></script>
+
+<style type="text/css">
+    #entry_reg{margin-top: 10px;}
+</style>
+</head>
+<body>
+
+<div id="container">
+	<div id="output">
+		<div class="containerT">
+            <div id="d_entry">
+                <h1>用户登录</h1>
+                <form class="form" id="entry_form" action="/login">
+                    <input type="text" placeholder="用户名" id="entry_name"
+                           value="" name="user_name">
+                    <input type="password" placeholder="密码" id="entry_password"
+                           name="password">
+                    <button type="button" id="entry_btn"
+                            onclick="submitForm('entry')">登录</button>
+                    <button type="button" id="entry_reg"
+                            onclick="upForm()">注册</button>
+                    <div id="prompt" class="prompt"></div>
+                </form>
+            </div>
+            <div id='d_pop_up' style="display: none">
+                <h1>用户注册</h1>
+                <form class="form" id="pop_up_form" action="/create_user">
+                    <input type="text" placeholder="用户名" id="pop_up_name"
+                           value="" name="user_name">
+                    <input type="password" placeholder="密码" id="pop_up_password"
+                           name="password">
+                    <button type="button" id="pop_up_btn"
+                            onclick="submitForm('pop_up')">提交</button>
+				    <div id="prompt" class="prompt"></div>
+                </form>
+            </div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        Victor("container", "output");   //登陆背景函数
+        $("#entry_name").focus();
+        $(document).keydown(function(event){
+            if(event.keyCode==13){
+                $("#entry_btn").click();
+            }
+        });
+    });
+
+    function checkForm(formStr){
+        let userName;
+        let password;
+
+        if(formStr === 'entry'){
+            userName = document.getElementById("entry_name").value;
+            password = document.getElementById("entry_password").value;
+        }else {
+            userName = document.getElementById("pop_up_name").value;
+            password = document.getElementById("pop_up_password").value;
+        }
+        if(userName && password){
+            return true;
+        }else {
+            document.getElementById("prompt").innerText = '用户名或密码不能为空';
+            return false;
+        }
+    }
+
+    function upForm(){
+        let oUpForm = document.getElementById('d_pop_up');
+        let oForm = document.getElementById('d_entry');
+        oUpForm.style.display = 'block';
+        oForm.style.display = 'none';
+    }
+
+    function submitForm(formStr){
+        if(checkForm(formStr)){
+            let submitData;
+            let reqUrl;
+            let user_name;
+            let password;
+
+            if(formStr === 'entry' ){
+                user_name =  document.getElementById('entry_name').value;
+                password = document.getElementById('entry_password').value;
+            }else {
+                user_name = document.getElementById('pop_up_name').value;
+                password = document.getElementById('pop_up_password').value;
+            }
+
+            let host = window.location.host;
+
+            let httpRequest = new XMLHttpRequest();
+            if(formStr === 'entry'){
+                reqUrl = host + '/login';
+            }else {
+                reqUrl = host + '/create_user';
+            }
+
+            submitData = 'user_name=' + user_name + '&password=' + password;
+            reqUrl = 'http://' + reqUrl;
+
+            httpRequest.open('POST', reqUrl, true);
+            httpRequest.setRequestHeader("Content-type",
+                "application/x-www-form-urlencoded");
+
+            httpRequest.send(submitData);
+            httpRequest.onreadystatechange = function () {
+                if(httpRequest.readyState === 4 && httpRequest.status === 200){
+                    let resData = httpRequest.responseText;
+                    if (resData){
+                        resData = eval('(' + resData + ')');
+                        if (resData.status !== 0) {
+                            Dialog['error']('error', resData.msg);
+                        }else {
+                            window.location.href = 'http://' + window.location
+                                .host;
+                        }
+                    }
+                }
+            };
+        }
+    }
+</script>
+<script src="/static/js/alerts/MiniDialog-es5.min.js"></script>
+</body>
+</html>
