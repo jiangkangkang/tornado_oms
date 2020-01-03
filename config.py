@@ -10,7 +10,8 @@ class Config:
         self.setting = {
             'template_path': os.path.join(os.path.dirname(__file__), 'templates'),
             'static_path': os.path.join(os.path.dirname(__file__), 'static'),
-            'debug': True
+            'debug': True,
+            'login_url': '/'
             }
 
     def load_configs(self):

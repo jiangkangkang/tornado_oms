@@ -37,9 +37,8 @@ def select_property_data(table, property=None, data=None, where_clause=None):
         where_sql = 'where ' + where_clause
     else:
         where_sql = 'where {}="{}"'.format(property, data)
-    args = ()
     sql = 'select * from {} {}'.format(table, where_sql)
-    result = yield MysqlInstance().query_all(sql, args)
+    result = yield MysqlInstance().query_all(sql)
     return result
 
 
@@ -47,7 +46,6 @@ def select_property_data(table, property=None, data=None, where_clause=None):
 @gen.coroutine
 def insert_table_new_data(table, data_dict):
     """
-    :param sanic_mysql_obj: myslq链接对象
     :param table: 操作的表名
     :param data_dict: 创建数据信息
     :return:

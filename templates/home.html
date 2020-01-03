@@ -1,1 +1,185 @@
 {% extends 'base.html' %}
+
+{% block title %}首页{% end block %}
+{% block css %}
+<link rel="stylesheet" href="/static/css/zzsc.css">
+<script src="/static/js/comment.js"></script>
+<style>
+    .next_content{
+        position: absolute;
+        left: auto;
+        top: 420px;
+        z-index:1;
+        width: 100%;
+        height: 100%;
+        background-color: red;
+    }
+    .ad{
+        position: absolute;
+        top: 53px;
+        z-index: 1;
+        width: 200px;
+        height: 360px;
+        background-color: aqua;
+    }
+    .title_ad_left{
+        left: 5px;
+    }
+    .title_ad_right{
+        right: 5px;
+    }
+    .next_content_left{
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 16%;
+        height: 100%;
+        background-color: #419641;
+    }
+    .next_content_right{
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 16%;
+        height: 100%;
+        background-color: #9acfea;
+
+    }
+
+</style>
+{% end block %}
+
+{% block content %}
+<div class="title_ad">
+    <div class="title_ad_left ad"></div>
+    <div class="title_ad_right ad"></div>
+</div>
+
+<div class="Aflash">
+    <ul class="picUL">
+        <li class="picLI" id="j-focusPic">
+            <div class="picbox j-slider" style="left: -22310px;">
+                <span class="j-item">
+                    <a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》">
+                        <img width="970" src="/static/images/cda01360eaa0634a6c7277398b51dea19872.jpg" data-src="/static/images/cda01360eaa0634a6c7277398b51dea19872.jpg" class="loading">
+                    </a>
+                </span>
+
+
+                <span class="j-item">
+                    <a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集">
+                    <img width="970" src="/static/images/f0505e4ca9fe77f72f738acda0d4f74f5498.jpg" data-src="/static/images/f0505e4ca9fe77f72f738acda0d4f74f5498.jpg" class="loading">
+                    </a>
+                </span>
+
+            </div>
+
+            <div class="bg j-infobg" style="opacity: 0.5;"></div>
+
+            <div class="info j-info" style="display: block;">
+                <div class="infotxt w">
+                    <h2><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》">【高清正片】战神重组 为战重生：《敢死队2》</a></h2>
+                    <p><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》">史泰龙率一众老牌硬汉再度集结，施瓦辛格、斯坦森、李连杰，阵容更为强悍，在新成员的帮助下，敢死队员们要为死去的同伴报仇，捍卫正义。</a></p>
+                </div>
+
+                <div class="infotxt w">
+                    <h2><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集">【独家热播】《虎符传奇》更新至14集</a></h2>
+                    <p><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集">该剧描写的是春秋战国时期四公子以及传奇女子如姬夫人之间讲诚信、重承诺，以生命的代价维护正义：不畏权势，慈悲悯弱的动人传说。</a></p>
+                </div>
+            </div>
+
+            <div class="info j-infocontainer" style="display:none;">
+
+                <div class="infotxt w">
+                    <h2><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》">【高清正片】战神重组 为战重生：《敢死队2》</a></h2>
+                    <p><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》">史泰龙率一众老牌硬汉再度集结，施瓦辛格、斯坦森、李连杰，阵容更为强悍，在新成员的帮助下，敢死队员们要为死去的同伴报仇，捍卫正义。</a></p>
+                </div>
+
+                <div class="infotxt w">
+                    <h2><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集">【独家热播】《虎符传奇》更新至14集</a></h2>
+                    <p><a target="_blank" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集">该剧描写的是春秋战国时期四公子以及传奇女子如姬夫人之间讲诚信、重承诺，以生命的代价维护正义：不畏权势，慈悲悯弱的动人传说。</a></p>
+                </div>
+
+            </div>
+        </li>
+    </ul>
+
+    <div class="infobtn" id="j-focusBtns">
+        <div class="pre on-1">
+            <a href="javascript:void(0)"></a>
+            <i style="display:none"></i></div>
+
+        <div class="smalpic j-container">
+            <div class="smallbox j-slider" style="left: 0px;">
+
+                <a class="j-item" href="http://sc.chinaz.com/jiaoben/" title="【高清正片】战神重组 为战重生：《敢死队2》" target="_blank">
+                  <img src="/static/images/3db3b6829c4d92879bd779a47b6d295b9517.jpg" alt="【高清正片】战神重组 为战重生：《敢死队2》">
+                  <b></b>
+                </a>
+
+                <a class="j-item" href="http://sc.chinaz.com/jiaoben/" title="【独家热播】《虎符传奇》更新至14集" target="_blank">
+                  <img src="/static/images/9e0f213dc0b2539c5bc4c278b1e5944a7349.jpg" alt="【独家热播】《虎符传奇》更新至14集">
+                  <b></b>
+                </a>
+            </div>
+        </div>
+        <div class="next"><a href="javascript:void(0)"></a><i
+                style="display:none"></i></div>
+    </div>
+</div>
+
+{% end block %}
+{% block next_content %}
+<dev class="next_content">
+    <div class="next_content_left"></div>
+    <div class="next_content_medium"></div>
+    <div class="next_content_right"></div>
+</dev>
+{% end block %}
+{% block script %}
+<script src="/static/js/zzsc.js"></script>
+<script>
+    function displayAdContent(){
+    let titleAd = document.getElementsByClassName('title_ad')[0];
+    let contentLeft = document.getElementsByClassName('next_content_left')[0];
+    let contentRight = document.getElementsByClassName('next_content_right')[0];
+    let oAflash = document.getElementsByClassName('Aflash');
+    let clientWidth = document.body.clientWidth;
+    if(Number(clientWidth) < 1380){
+        titleAd.style.display="none";
+        contentLeft.style.display="none";
+        contentRight.style.display="none";
+        oAflash.style.width = Number(clientWidth).toString() + 'px';
+        oAflash.style.overflow = 'hidden';
+    }else {
+        titleAd.style.display="block";
+        contentLeft.style.display="block";
+        contentRight.style.display="block";
+    }}
+
+    function loadNextContentLeftData(){
+        let url = '/api/top_ranking';
+        url = HOST + url;
+        $.ajax({
+            type:'get',
+            url:url,
+            success:function(data){
+                if (data){
+                    alert(data);
+                }
+            }
+        })
+    }
+
+    window.onresize = function (){displayAdContent()};
+    window.onload = function () {
+        displayAdContent();
+        loadNextContentLeftData();
+
+    }
+
+
+
+
+</script>
+{% end block %}

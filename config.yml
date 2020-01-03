@@ -16,7 +16,7 @@ REDIS:
     password: root
 WEB_GLOBAL:
     web_host: 0.0.0.0
-    web_port: 8083
+    web_port: 8085
     login_cookie_name: oms_tornado
     access_log: true
     is_prod: false

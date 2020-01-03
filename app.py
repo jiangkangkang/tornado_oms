@@ -10,6 +10,7 @@ if __name__ == '__main__':
     app = Application(handlers, **config_info['setting'])
     http_server = HTTPServer(app)
     http_server.listen(config_info['WEB_GLOBAL']['web_port'])
-    print('post:' + str(config_info['WEB_GLOBAL']['web_port']) + '....')
+    print('http://' + str(config_info['WEB_GLOBAL']['web_host']) + ':' +
+          str(config_info['WEB_GLOBAL']['web_port']))
     http_server.start()
     IOLoop.current().start()

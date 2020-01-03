@@ -18,6 +18,16 @@ class User(Base):
     remark = sa.Column(sa.String(250))
 
 
+class Ranking(Base):
+    __tablename__ = 'ranking_manage'
+    id = sa.Column(sa.Integer, primary_key=True)
+    title = sa.Column(sa.String(100), index=True)
+    url = sa.Column(sa.String(500))
+    remark = sa.Column(sa.String(200))
+    click_num = sa.Column(sa.Integer(), index=True)
+    create_time = sa.Column(sa.DateTime)
+
+
 if __name__ == "__main__":
 
     engine = sa.create_engine("sqlite:///test.db")
